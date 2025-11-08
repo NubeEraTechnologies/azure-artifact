@@ -1,0 +1,53 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  NODE_VERSION: '20'               # pick your desired node version
+  PACKAGE_PATH: './package'  # path to your package (relative to repo root)
+  ORGANIZATION: 'nubeeratechnologies'
+  FEED: 'myartifact'
+
+steps:
+# 1) Setup Node
+- task: UseNode@1
+  displayName: 'Use Node.js $(NODE_VERSION)'
+  inputs:
+    versionSpec: '$(NODE_VERSION)'
+    checkLatest: true
+
+# 2) Authenticate npm to Azure Artifacts (creates a temporary .npmrc)
+- task: npmAuthenticate@0
+  displayName: 'Authenticate npm to Azure Artifacts'
+  inputs:
+    workingFile: '.npmrc'  # writes auth into this file in the repo workspace during the build
+
+# 3) Install dependencies & build (runs in repo root by default)
+- script: |
+    cd $(PACKAGE_PATH)
+    npm ci
+    npm run build
+  displayName: 'Install & build package'
+
+# 4) Run tests (optional but recommended)
+- script: |
+    cd $(PACKAGE_PATH)
+    npm test || true    # change to fail if tests are required
+  displayName: 'Run tests (optional)'
+
+# 5) Publish to Azure Artifacts feed
+- task: Npm@0
+  displayName: 'Publish npm package to Azure Artifacts'
+  inputs:
+    command: 'custom'
+    workingDir: '$(PACKAGE_PATH)'
+    customCommand: 'publish --registry https://pkgs.dev.azure.com/$(ORGANIZATION)/_packaging/$(FEED)/npm/registry/'
+
+# 6) Cleanup - remove written .npmrc (security)
+- script: |
+    if [ -f .npmrc ]; then rm -f .npmrc; fi
+  displayName: 'Remove .npmrc from agent workspace'
