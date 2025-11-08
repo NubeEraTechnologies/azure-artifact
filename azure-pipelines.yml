@@ -44,7 +44,7 @@ steps:
   displayName: 'Publish npm package to Azure Artifacts'
   inputs:
     command: 'custom'
-    workingDir: '$(PACKAGE_PATH)'
+    workingDir: '.'
     customCommand: 'publish --registry https://pkgs.dev.azure.com/$(ORGANIZATION)/_packaging/$(FEED)/npm/registry/'
 
 # 6) Cleanup - remove written .npmrc (security)
