@@ -291,6 +291,3 @@ npm cache clean --force
 * [Azure Pipelines YAML Schema](https://learn.microsoft.com/azure/devops/pipelines/yaml-schema)
 
 ---
-
-Would you like me to add a **section for troubleshooting common npm errors (E401, missing .npmrc, token invalid, etc.)** at the end of this README?
-It’ll make it production-grade and ready for submission or team onboarding.
