@@ -1,0 +1,11 @@
+{
+  "name": "@nubeeratechnologies/my-lib",
+  "version": "1.0.0",
+  "description": "Example package",
+  "main": "index.js",
+  "files": ["index.js"],
+  "scripts": {
+    "build": "echo Building... && mkdir -p dist && cp index.js dist/",
+    "prepublishOnly": "npm run build"
+  }
+}
