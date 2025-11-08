@@ -23,7 +23,7 @@ steps:
 - task: npmAuthenticate@0
   displayName: 'Authenticate npm to Azure Artifacts'
   inputs:
-    workingFile: '/home/azureuser/npm-artifact/.npmrc'
+    workingFile: '.npmrc'
 
 # Step 3 — Install dependencies & build
 - script: |
