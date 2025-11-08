@@ -13,12 +13,11 @@ variables:
   FEED: 'myartifact'
 
 steps:
-# 1) Setup Node
+# Step 1 — Install modern Node.js
 - task: UseNode@1
-  displayName: 'Use Node.js $(NODE_VERSION)'
   inputs:
-    versionSpec: '$(NODE_VERSION)'
-    checkLatest: true
+    versionSpec: '18.x'
+  displayName: 'Use Node.js 18'
 
 # 2) Authenticate npm to Azure Artifacts (creates a temporary .npmrc)
 - task: npmAuthenticate@0
