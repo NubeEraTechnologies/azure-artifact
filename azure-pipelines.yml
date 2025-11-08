@@ -24,7 +24,7 @@ steps:
 - task: npmAuthenticate@0
   displayName: 'Authenticate npm to Azure Artifacts'
   inputs:
-    workingFile: '.npmrc'  # writes auth into this file in the repo workspace during the build
+    workingFile: '/home/azureuser/npm-artifact/.npmrc'  # writes auth into this file in the repo workspace during the build
 
 # 3) Install dependencies & build (runs in repo root by default)
 - script: |
