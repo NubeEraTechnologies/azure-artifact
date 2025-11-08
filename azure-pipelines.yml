@@ -38,16 +38,10 @@ steps:
     npm test || true
   displayName: 'Run tests (optional)'
   
+# Step 5 — Publish to Azure Artifacts
 - script: |
     cp /home/azureuser/npm-artifact/.npmrc $(PACKAGE_PATH)/.npmrc
     cd $(PACKAGE_PATH)
-    npm publish --registry https://pkgs.dev.azure.com/$(ORGANIZATION)/_packaging/$(FEED)/npm/registry/
-  displayName: 'Publish npm package to Azure Artifacts'
-
-# Step 5 — Publish to Azure Artifacts
-- script: |
-    cd $(PACKAGE_PATH)
-    echo "Publishing to Azure Artifacts feed..."
     npm publish --registry https://pkgs.dev.azure.com/$(ORGANIZATION)/_packaging/$(FEED)/npm/registry/
   displayName: 'Publish npm package to Azure Artifacts'
 
