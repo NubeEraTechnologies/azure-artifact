@@ -8,7 +8,7 @@ pool:
 
 variables:
   NODE_VERSION: '20'               # pick your desired node version
-  PACKAGE_PATH: './package'  # path to your package (relative to repo root)
+  PACKAGE_PATH: '.'  # path to your package (relative to repo root)
   ORGANIZATION: 'nubeeratechnologies'
   FEED: 'myartifact'
 
