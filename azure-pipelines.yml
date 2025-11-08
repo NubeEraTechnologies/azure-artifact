@@ -7,7 +7,7 @@ pool:
   name: 'default'
 
 variables:
-  NODE_VERSION: '20'
+  NODE_VERSION: '18'
   PACKAGE_PATH: '.'
   ORGANIZATION: 'nubeeratechnologies'
   FEED: 'myartifact'
@@ -40,15 +40,8 @@ steps:
   
 # Step 5 — Publish to Azure Artifacts
 - script: |
-    cp /home/azureuser/npm-artifact/.npmrc $(PACKAGE_PATH)/.npmrc
     cd $(PACKAGE_PATH)
-    npm publish --registry https://pkgs.dev.azure.com/$(ORGANIZATION)/_packaging/$(FEED)/npm/registry/
+    npm publish
   displayName: 'Publish npm package to Azure Artifacts'
-
-# Step 6 — Cleanup
-- script: |
-    if [ -f /home/azureuser/npm-artifact/.npmrc ]; then
-      echo "Cleaning up .npmrc..."
-      rm -f /home/azureuser/npm-artifact/.npmrc
-    fi
-  displayName: 'Cleanup .npmrc'
+  env:
+    NODE_EXTRA_CA_CERTS: $(Agent.TrustedCertPath)
