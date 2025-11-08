@@ -7,35 +7,48 @@ pool:
   name: 'default'
 
 variables:
-  NODE_VERSION: '18'
+  NODE_VERSION: '20'
   PACKAGE_PATH: '.'
   ORGANIZATION: 'nubeeratechnologies'
   FEED: 'myartifact'
 
 steps:
-- script: |
-    node -v
-    npm -v
-  displayName: 'Check Node & npm versions'
+# Step 1 — Use Node.js
+- task: UseNode@1
+  inputs:
+    versionSpec: '18.20.8'
+  displayName: 'Use Node.js 18'
 
+# Step 2 — Authenticate npm to Azure Artifacts
 - task: npmAuthenticate@0
   displayName: 'Authenticate npm to Azure Artifacts'
   inputs:
     workingFile: '/home/azureuser/npm-artifact/.npmrc'
 
+# Step 3 — Install dependencies & build
 - script: |
     cd $(PACKAGE_PATH)
-    npm install
+    npm ci
     npm run build
   displayName: 'Install & build package'
 
-- task: Npm@0
-  displayName: 'Publish npm package to Azure Artifacts'
-  inputs:
-    command: 'custom'
-    workingDir: '$(PACKAGE_PATH)'
-    customCommand: 'publish --registry https://pkgs.dev.azure.com/$(ORGANIZATION)/_packaging/$(FEED)/npm/registry/'
-
+# Step 4 — Run tests (optional)
 - script: |
-    if [ -f .npmrc ]; then rm -f .npmrc; fi
-  displayName: 'Remove .npmrc from agent workspace'
+    cd $(PACKAGE_PATH)
+    npm test || true
+  displayName: 'Run tests (optional)'
+
+# Step 5 — Publish to Azure Artifacts
+- script: |
+    cd $(PACKAGE_PATH)
+    echo "Publishing to Azure Artifacts feed..."
+    npm publish --registry https://pkgs.dev.azure.com/$(ORGANIZATION)/_packaging/$(FEED)/npm/registry/
+  displayName: 'Publish npm package to Azure Artifacts'
+
+# Step 6 — Cleanup
+- script: |
+    if [ -f /home/azureuser/npm-artifact/.npmrc ]; then
+      echo "Cleaning up .npmrc..."
+      rm -f /home/azureuser/npm-artifact/.npmrc
+    fi
+  displayName: 'Cleanup .npmrc'
