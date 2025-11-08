@@ -4,7 +4,7 @@ trigger:
       - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  name: 'extractor-1'
 
 variables:
   NODE_VERSION: '20'               # pick your desired node version
