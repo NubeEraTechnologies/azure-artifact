@@ -38,15 +38,23 @@ steps:
     npm test || true
   displayName: 'Run tests (optional)'
 
-# Step 4.5 — Bump version
+# step BEFORE build
 - script: |
     cd $(PACKAGE_PATH)
     npm version patch --no-git-tag-version
-  displayName: "Auto bump version before publish"
+  displayName: "Auto bump version before build"
 
-# Step 5 — Publish
+# now build
+- script: |
+    cd $(PACKAGE_PATH)
+    npm ci
+    npm run build
+  displayName: 'Install & build package'
+
+# now publish
 - script: |
     cd $(PACKAGE_PATH)
     npm publish
   displayName: 'Publish npm package to Azure Artifacts'
+
 
