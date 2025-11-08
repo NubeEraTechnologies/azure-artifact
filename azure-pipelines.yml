@@ -37,6 +37,10 @@ steps:
     cd $(PACKAGE_PATH)
     npm test || true
   displayName: 'Run tests (optional)'
+
+- script: |
+    npm version patch --no-git-tag-version
+  displayName: "Auto bump version"
   
 # Step 5 — Publish to Azure Artifacts
 - script: |
